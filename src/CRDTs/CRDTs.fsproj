@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="GCounter.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="GCounter.fsi" />
+  </ItemGroup>
+
+</Project>
