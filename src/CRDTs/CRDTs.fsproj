@@ -1,12 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
+  <!-- <ItemGroup>
+    <Compile Include="State\GCounter.fsi" />
+  </ItemGroup> -->
   <ItemGroup>
-    <Compile Include="GCounter.fs" />
+    <Compile Include="State\GCounter.fs" />
   </ItemGroup>
- <ItemGroup>
-    <None Include="GCounter.fsi" />
+  <!-- <ItemGroup>
+    <Compile Include="State\PNCounter.fsi" />
+  </ItemGroup> -->
+  <ItemGroup>
+    <Compile Include="State\PNCounter.fs" />
   </ItemGroup>
 </Project>

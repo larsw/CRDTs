@@ -1,11 +1,14 @@
-namespace CRDTs
+namespace CRDTs.State
 
-type GCounter<'K> when 'K : comparison = { payload: Map<'K, uint32> }
+///**Description**
+/// The Grow-Only Counter type.
+type public GCounter<'K> when 'K : comparison = { payload: Map<'K, uint32> }
 
-[<AutoOpen>]
-module GCounter =
-  let init<'K when 'K : comparison> =
-    { payload = Map([]) }
+///**Description**
+/// Operations on the GCounter<'K> type.
+module public GCounter =
+  let init<'K when 'K: comparison> =
+    { payload = Map.empty }
   ///**Description**
   /// Increments the counter replicate by one.
   ///**Parameters**
@@ -14,7 +17,7 @@ module GCounter =
   ///
   ///**Output Type**
   ///  * `GCounter<'K>`
-  let increment<'K when 'K : comparison> (key: 'K) (counter: GCounter<'K>) =
+  let increment (key: 'K) (counter: GCounter<'K>) =
     match Map.tryFind key counter.payload with
     | Some x -> { payload = Map.add key (x + uint32 1) counter.payload }
     | None -> { payload = Map([(key, uint32 1)]) }
@@ -32,7 +35,7 @@ module GCounter =
   ///
   ///**Exceptions**
   ///
-  let incrementBy<'K when 'K : comparison> (key:'K) (counter: GCounter<'K>) (ticks:uint32) =
+  let incrementBy (key:'K) (counter: GCounter<'K>) (ticks:uint32) =
     match Map.tryFind key counter.payload with
     | Some x -> { payload = Map.add key (x + ticks) counter.payload }
     | None -> { payload = Map([(key, ticks)])}
@@ -44,7 +47,7 @@ module GCounter =
   ///
   ///**Output Type**
   ///  * `uint32` The current value of this counter replica.
-  let query<'K when 'K : comparison> (counter:GCounter<'K>) =
+  let query (counter:GCounter<'K>) =
     let folder s _ v =
         s + v
     let initialState = uint32 0
@@ -59,7 +62,7 @@ module GCounter =
   ///
   ///**Output Type**
   ///  * `bool` true if the counters are equal, else false.
-  let compare<'K when 'K : comparison> (x:GCounter<'K>) (y:GCounter<'K>) =
+  let compare (x:GCounter<'K>) (y:GCounter<'K>) =
     let pred k xv =
         match Map.tryFind k y.payload with
         | Some yv -> xv <= yv
@@ -75,10 +78,10 @@ module GCounter =
   ///
   ///**Output Type**
   ///  * `GCounter<'K>` A new counter containing the merge result.
-  let merge<'K when 'K : comparison> (x:GCounter<'K>) (y:GCounter<'K>) =
+  let merge (x:GCounter<'K>) (y:GCounter<'K>) =
     let merger k xv =
         match Map.tryFind k y.payload with
-        | Some yv -> if xv <= yv then yv else xv
+        | Some yv -> System.Math.Max(xv, yv)
         | None -> xv
     let mergedPayload = Map.map merger x.payload
     { payload = mergedPayload }

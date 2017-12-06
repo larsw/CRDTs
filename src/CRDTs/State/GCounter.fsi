@@ -1,13 +1,10 @@
-﻿namespace CRDTs
+﻿namespace CRDTs.State
 
-type GCounter<'K> when 'K : comparison = { p: Map<'K, uint32> }
+type public GCounter<'K> when 'K : comparison = { payload: Map<'K, uint32> }
 
-module GCounter =
+module public GCounter =
+  val init : GCounter<'K>
   val increment : 'K -> GCounter<'K> -> GCounter<'K>
-    when 'K : comparison
   val query : GCounter<'K> -> uint32
-    when 'K : comparison
   val compare : GCounter<'K> -> GCounter<'K> -> bool
-    when 'K : comparison
   val merge : GCounter<'K> -> GCounter<'K> -> GCounter<'K>
-    when 'K : comparison
